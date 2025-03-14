@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.set_page_config(page_title="Tes Gaya Belajar", page_icon="📚", layout="centered")
+
 # Judul aplikasi
 st.title("Tes Gaya Belajar")
 
