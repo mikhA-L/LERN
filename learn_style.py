@@ -106,7 +106,7 @@ gaya_belajar = max(skor, key=skor.get)
     
 # Tampilkan hasil
 if st.button("Lihat Hasil"):
-    spreadsheet.append_row([nama, gaya_belajar, saran_perbaikan])
+    worksheet.append_row([nama, gaya_belajar, saran_perbaikan])
     st.success("Jawaban Anda telah disimpan! Terima kasih telah mengisi kuisioner.")
     st.write("Hasil Evaluasi Gaya Belajar Anda")
     st.write(f"## **Gaya belajar dominan Anda adalah: {gaya_belajar}**")
