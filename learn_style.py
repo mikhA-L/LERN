@@ -1,13 +1,20 @@
+import json
 import streamlit as st
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
+# Load credentials dari Streamlit Secrets
+creds_json = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
+
+# Gunakan credentials untuk autentikasi ke Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 client = gspread.authorize(creds)
 
-# Buka Spreadsheet
-spreadsheet = client.open("Data Kuisioner").sheet1  # Ganti dengan nama Google Sheets-mu
+# Buka Google Sheet
+spreadsheet = client.open("Data Kuisioner")
+worksheet = spreadsheet.sheet1
 
 # Judul Aplikasi
 st.set_page_config(page_title="Tes Gaya Belajar", page_icon="📚", layout="centered")
@@ -63,7 +70,7 @@ pertanyaan = [
         ["Buku atau teks", "Audio atau podcast", "Video atau gambar", "Percobaan atau kegiatan langsung"],
         ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-    # PERTANYAAN TAMBAHAN
+    # 🔹 PERTANYAAN TAMBAHAN
     ("Bagaimana cara Anda mencatat materi di kelas?",
         ["Menulis ringkasan atau catatan", "Merekam suara penjelasan guru", "Membuat diagram atau peta konsep", "Tidak mencatat, lebih suka praktik"],
         ["Membaca", "Auditori", "Visual", "Kinestetik"]),
@@ -87,7 +94,7 @@ for i, (pertanyaan_teks, opsi, kategori) in enumerate(pertanyaan, 1):
     jawaban = st.radio("", opsi, key=f"q{i}")
     skor[kategori[opsi.index(jawaban)]] += 1
 
-# PERTANYAAN TERBUKA
+# 🔹 PERTANYAAN TERBUKA
 saran_perbaikan = st.text_area(
     "Apa yang bisa diperbaiki dari sistem pembelajaran saat ini?",
     placeholder="Tulis pendapat atau saran Anda di sini..."
