@@ -1,111 +1,98 @@
 import streamlit as st
 
 # Judul Aplikasi
+st.set_page_config(page_title="Tes Gaya Belajar", page_icon="📚", layout="centered")
 st.title("Kuisioner Evaluasi Gaya Belajar")
 
 st.write("### Petunjuk:")
 st.write("Jawablah pertanyaan di bawah ini untuk mengetahui gaya belajar Anda.")
 
 # Variabel untuk menyimpan skor gaya belajar
-skor_visual = 0
-skor_auditori = 0
-skor_kinestetik = 0
-skor_membaca = 0
+skor = {"Visual": 0, "Auditori": 0, "Kinestetik": 0, "Membaca": 0}
 
-# ---- Pertanyaan Kuisioner ----
-st.write("## 1. Bagaimana cara terbaik bagi Anda untuk memahami materi pelajaran?")
-q1 = st.radio("", ["Membaca buku atau modul", "Mendengarkan penjelasan guru", "Melihat gambar, diagram, atau video", "Praktik langsung atau diskusi kelompok"])
-if q1 == "Membaca buku atau modul":
-    skor_membaca += 1
-elif q1 == "Mendengarkan penjelasan guru":
-    skor_auditori += 1
-elif q1 == "Melihat gambar, diagram, atau video":
-    skor_visual += 1
-elif q1 == "Praktik langsung atau diskusi kelompok":
-    skor_kinestetik += 1
+# Pertanyaan kuisioner dan kategori skornya
+pertanyaan = [
+    ("Bagaimana cara terbaik bagi Anda untuk memahami materi pelajaran?", 
+        ["Membaca buku atau modul", "Mendengarkan penjelasan guru", "Melihat gambar, diagram, atau video", "Praktik langsung atau diskusi kelompok"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-st.write("## 2. Saat mengikuti pembelajaran, saya lebih suka jika...")
-q2 = st.radio("", ["Guru menjelaskan dengan presentasi dan gambar", "Guru menjelaskan dengan suara cerita", "Guru memberikan latihan dan praktik langsung", "Guru memberikan tugas individu untuk memahami materi"])
-if q2 == "Guru menjelaskan dengan presentasi dan gambar":
-    skor_visual += 1
-elif q2 == "Guru menjelaskan dengan suara cerita":
-    skor_auditori += 1
-elif q2 == "Guru memberikan latihan dan praktik langsung":
-    skor_kinestetik += 1
-elif q2 == "Guru memberikan tugas individu untuk memahami materi":
-    skor_membaca += 1
+    ("Saat mengikuti pembelajaran, saya lebih suka jika...",
+        ["Guru menjelaskan dengan presentasi dan gambar", "Guru menjelaskan dengan suara cerita", "Guru memberikan latihan dan praktik langsung", "Guru memberikan tugas individu untuk memahami materi"],
+        ["Visual", "Auditori", "Kinestetik", "Membaca"]),
 
-st.write("## 3. Apakah materi yang disampaikan oleh guru selama ini mudah dipahami?")
-q3 = st.radio("", ["Sangat mudah dipahami", "Cukup mudah dipahami", "Sulit dipahami", "Sangat sulit dipahami"])
-# Pertanyaan ini tidak mempengaruhi gaya belajar
+    ("Metode pembelajaran mana yang menurut Anda paling efektif?",
+        ["Tatap muka di kelas dengan penjelasan guru", "Pembelajaran berbasis buku atau modul cetak", "Pembelajaran digital (video, animasi, atau simulasi online)", "Diskusi kelompok atau praktik langsung"],
+        ["Auditori", "Membaca", "Visual", "Kinestetik"]),
 
-st.write("## 4. Metode pembelajaran mana yang menurut Anda paling efektif?")
-q4 = st.radio("", ["Tatap muka di kelas dengan penjelasan guru", "Pembelajaran berbasis buku atau modul cetak", "Pembelajaran digital (video, animasi, atau simulasi online)", "Diskusi kelompok atau praktik langsung"])
-if q4 == "Pembelajaran berbasis buku atau modul cetak":
-    skor_membaca += 1
-elif q4 == "Pembelajaran digital (video, animasi, atau simulasi online)":
-    skor_visual += 1
-elif q4 == "Diskusi kelompok atau praktik langsung":
-    skor_kinestetik += 1
-elif q4 == "Tatap muka di kelas dengan penjelasan guru":
-    skor_auditori += 1
+    ("Ketika saya kesulitan memahami materi, saya lebih suka...",
+        ["Membaca ulang materi dari buku atau catatan", "Menonton video pembelajaran terkait", "Bertanya langsung kepada guru", "Berdiskusi dengan teman"],
+        ["Membaca", "Visual", "Auditori", "Kinestetik"]),
 
-st.write("## 5. Bagaimana cara penyampaian materi oleh guru selama ini?")
-q5 = st.radio("", ["Sangat menarik dan jelas", "Cukup menarik, tapi masih perlu perbaikan", "Kurang menarik dan sering membingungkan", "Tidak menarik dan sulit dipahami"])
-# Pertanyaan ini tidak mempengaruhi gaya belajar
+    ("Jika ada perubahan dalam metode pembelajaran, Anda ingin lebih banyak...",
+        ["Materi dalam bentuk video atau gambar", "Materi dalam bentuk teks atau modul cetak", "Diskusi dan praktik langsung di kelas", "Latihan soal dan evaluasi mandiri"],
+        ["Visual", "Membaca", "Kinestetik", "Membaca"]),
 
-st.write("## 6. Ketika saya kesulitan memahami materi, saya lebih suka...")
-q6 = st.radio("", ["Membaca ulang materi dari buku atau catatan", "Menonton video pembelajaran terkait", "Bertanya langsung kepada guru", "Berdiskusi dengan teman"])
-if q6 == "Membaca ulang materi dari buku atau catatan":
-    skor_membaca += 1
-elif q6 == "Menonton video pembelajaran terkait":
-    skor_visual += 1
-elif q6 == "Bertanya langsung kepada guru":
-    skor_auditori += 1
-elif q6 == "Berdiskusi dengan teman":
-    skor_kinestetik += 1
+    ("Saat belajar sendiri, saya lebih suka...",
+        ["Membaca buku atau modul", "Mendengarkan rekaman penjelasan", "Menonton video pembelajaran", "Melakukan eksperimen atau latihan"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-st.write("## 7. Seberapa sering Anda menggunakan teknologi (laptop, handphone, aplikasi edukasi) dalam belajar?")
-q7 = st.radio("", ["Setiap hari", "Beberapa kali seminggu", "Jarang", "Tidak pernah"])
-# Pertanyaan ini tidak mempengaruhi gaya belajar
+    ("Saya lebih mudah mengingat informasi jika...",
+        ["Membaca dan mencatat ulang", "Mendengarkan dan berdiskusi", "Melihat diagram atau ilustrasi", "Melakukan praktik langsung"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-st.write("## 8. Bagaimana tingkat kepuasan Anda terhadap pembelajaran yang telah dilakukan selama ini?")
-q8 = st.radio("", ["Sangat puas", "Cukup puas", "Kurang puas", "Tidak puas"])
-# Pertanyaan ini tidak mempengaruhi gaya belajar
+    ("Ketika mengerjakan tugas, saya lebih suka...",
+        ["Menulis ringkasan atau catatan", "Mendiskusikan dengan teman atau guru", "Menggunakan peta konsep atau mind map", "Mencoba menyelesaikan dengan eksperimen"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-st.write("## 9. Jika ada perubahan dalam metode pembelajaran, Anda ingin lebih banyak...")
-q9 = st.radio("", ["Materi dalam bentuk video atau gambar", "Materi dalam bentuk teks atau modul cetak", "Diskusi dan praktik langsung di kelas", "Latihan soal dan evaluasi mandiri"])
-if q9 == "Materi dalam bentuk video atau gambar":
-    skor_visual += 1
-elif q9 == "Materi dalam bentuk teks atau modul cetak":
-    skor_membaca += 1
-elif q9 == "Diskusi dan praktik langsung di kelas":
-    skor_kinestetik += 1
-elif q9 == "Latihan soal dan evaluasi mandiri":
-    skor_membaca += 1
+    ("Bagaimana cara terbaik bagi Anda untuk mengingat pelajaran?",
+        ["Membaca ulang dan mencatat", "Mendengarkan rekaman atau berdiskusi", "Melihat gambar atau peta konsep", "Melakukan kegiatan atau praktik"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-st.write("## 10. Apa yang bisa diperbaiki dari sistem pembelajaran saat ini?")
-q10 = st.text_area("Jawaban terbuka")
+    ("Saya lebih suka belajar melalui...",
+        ["Buku atau teks", "Audio atau podcast", "Video atau gambar", "Percobaan atau kegiatan langsung"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-# ---- Hasil Gaya Belajar ----
-if st.button("Lihat Gaya Belajar Anda"):
-    hasil = {
-        "Visual": skor_visual,
-        "Auditori": skor_auditori,
-        "Kinestetik": skor_kinestetik,
-        "Membaca/Menulis": skor_membaca
-    }
+    # 🔹 PERTANYAAN TAMBAHAN
+    ("Bagaimana cara Anda mencatat materi di kelas?",
+        ["Menulis ringkasan atau catatan", "Merekam suara penjelasan guru", "Membuat diagram atau peta konsep", "Tidak mencatat, lebih suka praktik"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-    gaya_belajar = max(hasil, key=hasil.get)
+    ("Ketika membaca buku pelajaran, saya lebih suka...",
+        ["Membaca seluruh isi buku dan mencatat", "Mendengarkan audio book atau rekaman", "Melihat ilustrasi dan gambar", "Mencoba menerapkan isi buku dalam latihan"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-    st.success(f"Gaya belajar utama Anda adalah {gaya_belajar}.")
+    ("Saat menonton video pembelajaran, saya lebih sering...",
+        ["Mencatat poin-poin penting", "Mendengarkan tanpa mencatat", "Melihat gambar dan animasi", "Mencoba praktik langsung dari video"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-    # Menampilkan penjelasan gaya belajar
-    if gaya_belajar == "Visual":
-        st.write("Anda lebih mudah belajar melalui gambar, diagram, video, dan presentasi.")
-    elif gaya_belajar == "Auditori":
-        st.write("Anda lebih mudah belajar dengan mendengarkan penjelasan atau diskusi verbal.")
-    elif gaya_belajar == "Kinestetik":
-        st.write("Anda lebih suka belajar dengan praktik langsung dan aktivitas fisik.")
-    elif gaya_belajar == "Membaca/Menulis":
-        st.write("Anda lebih suka belajar dengan membaca buku, mencatat, dan menulis ringkasan.")
+    ("Bagaimana Anda biasanya memahami konsep baru?",
+        ["Membaca buku atau catatan", "Mendiskusikan dengan teman/guru", "Melihat gambar, peta konsep, atau video", "Melakukan eksperimen langsung"],
+        ["Membaca", "Auditori", "Visual", "Kinestetik"]),
+]
+
+# Loop untuk menampilkan pertanyaan dan menyimpan jawaban
+for i, (pertanyaan_teks, opsi, kategori) in enumerate(pertanyaan, 1):
+    st.write(f"## {i}. {pertanyaan_teks}")
+    jawaban = st.radio("", opsi, key=f"q{i}")
+    skor[kategori[opsi.index(jawaban)]] += 1
+
+# 🔹 PERTANYAAN TERBUKA
+st.write("## 15. Apa yang bisa diperbaiki dari sistem pembelajaran saat ini?")
+jawaban_terbuka = st.text_area("Tuliskan pendapat Anda di sini...", key="q15")
+
+# Menentukan gaya belajar dominan
+gaya_belajar = max(skor, key=skor.get)
+
+# Tampilkan hasil
+if st.button("Lihat Hasil"):
+    st.write("Hasil Evaluasi Gaya Belajar Anda")
+    st.write(f"**Gaya belajar dominan Anda adalah: {gaya_belajar}**")
+    
+    st.write("### Rincian Skor:")
+    for tipe, nilai in skor.items():
+        st.write(f"- {tipe}: {nilai}")
+
+    # Menampilkan jawaban terbuka
+    if jawaban_terbuka.strip():
+        st.write("### Saran Perbaikan:")
+        st.write(jawaban_terbuka)
