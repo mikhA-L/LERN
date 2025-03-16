@@ -1,4 +1,13 @@
 import streamlit as st
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+client = gspread.authorize(creds)
+
+# Buka Spreadsheet
+spreadsheet = client.open("Data Kuisioner").sheet1  # Ganti dengan nama Google Sheets-mu
 
 # Judul Aplikasi
 st.set_page_config(page_title="Tes Gaya Belajar", page_icon="📚", layout="centered")
@@ -7,9 +16,11 @@ st.title("Kuisioner Evaluasi Gaya Belajar")
 st.write("### Petunjuk:")
 st.write("Jawablah pertanyaan di bawah ini untuk mengetahui gaya belajar Anda.")
 
+
 # Variabel untuk menyimpan skor gaya belajar
 skor = {"Visual": 0, "Auditori": 0, "Kinestetik": 0, "Membaca": 0}
 
+nama = st.text_input("Nama Anda:")
 # Pertanyaan kuisioner dan kategori skornya
 pertanyaan = [
     ("Bagaimana cara terbaik bagi Anda untuk memahami materi pelajaran?", 
@@ -52,7 +63,7 @@ pertanyaan = [
         ["Buku atau teks", "Audio atau podcast", "Video atau gambar", "Percobaan atau kegiatan langsung"],
         ["Membaca", "Auditori", "Visual", "Kinestetik"]),
 
-    # 🔹 PERTANYAAN TAMBAHAN
+    # PERTANYAAN TAMBAHAN
     ("Bagaimana cara Anda mencatat materi di kelas?",
         ["Menulis ringkasan atau catatan", "Merekam suara penjelasan guru", "Membuat diagram atau peta konsep", "Tidak mencatat, lebih suka praktik"],
         ["Membaca", "Auditori", "Visual", "Kinestetik"]),
@@ -76,23 +87,24 @@ for i, (pertanyaan_teks, opsi, kategori) in enumerate(pertanyaan, 1):
     jawaban = st.radio("", opsi, key=f"q{i}")
     skor[kategori[opsi.index(jawaban)]] += 1
 
-# 🔹 PERTANYAAN TERBUKA
-st.write("## 15. Apa yang bisa diperbaiki dari sistem pembelajaran saat ini?")
-jawaban_terbuka = st.text_area("Tuliskan pendapat Anda di sini...", key="q15")
+# PERTANYAAN TERBUKA
+saran_perbaikan = st.text_area(
+    "Apa yang bisa diperbaiki dari sistem pembelajaran saat ini?",
+    placeholder="Tulis pendapat atau saran Anda di sini..."
+)
 
 # Menentukan gaya belajar dominan
 gaya_belajar = max(skor, key=skor.get)
 
+    
 # Tampilkan hasil
 if st.button("Lihat Hasil"):
+    spreadsheet.append_row([nama, gaya_belajar, saran_perbaikan])
+    st.success("Jawaban Anda telah disimpan! Terima kasih telah mengisi kuisioner.")
     st.write("Hasil Evaluasi Gaya Belajar Anda")
-    st.write(f"**Gaya belajar dominan Anda adalah: {gaya_belajar}**")
-    
-    st.write("### Rincian Skor:")
+    st.write(f"## **Gaya belajar dominan Anda adalah: {gaya_belajar}**")
+
+    st.write("Rincian Skor:")
     for tipe, nilai in skor.items():
         st.write(f"- {tipe}: {nilai}")
-
-    # Menampilkan jawaban terbuka
-    if jawaban_terbuka.strip():
-        st.write("### Saran Perbaikan:")
-        st.write(jawaban_terbuka)
+        
